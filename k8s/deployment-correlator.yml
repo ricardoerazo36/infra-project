@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-correlator
+  namespace: news-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: news-correlator
+  template:
+    metadata:
+      labels:
+        app: news-correlator
+    spec:
+      containers:
+        - name: correlator
+          image: proyecto_correlator:latest
+          imagePullPolicy: Never
+          env:
+            - name: SLEEP_INTERVAL
+              value: "3600"
+          volumeMounts:
+            - name: shared-data
+              mountPath: /app/data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: news-data-pvc
