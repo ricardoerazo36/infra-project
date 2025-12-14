@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-downloader
+  namespace: news-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: news-downloader
+  template:
+    metadata:
+      labels:
+        app: news-downloader
+    spec:
+      containers:
+        - name: downloader
+          image: proyecto_downloader:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: shared-data
+              mountPath: /app/data
+      volumes:
+        - name: shared-data
+          hostPath:
+            path: /home/hlinux/Escritorio/proyecto/data
+            type: Directory

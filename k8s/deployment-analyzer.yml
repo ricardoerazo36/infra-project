@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-analyzer
+  namespace: news-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: news-analyzer
+  template:
+    metadata:
+      labels:
+        app: news-analyzer
+    spec:
+      containers:
+        - name: analyzer
+          image: proyecto_analyzer:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: shared-data
+              mountPath: /app/data
+      volumes:
+        - name: shared-data
+          hostPath:
+            path: /home/hlinux/Escritorio/proyecto/data
+            type: Directory

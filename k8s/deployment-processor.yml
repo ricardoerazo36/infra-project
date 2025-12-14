@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-processor
+  namespace: news-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: news-processor
+  template:
+    metadata:
+      labels:
+        app: news-processor
+    spec:
+      containers:
+        - name: processor
+          image: proyecto_processor:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: shared-data
+              mountPath: /app/data
+      volumes:
+        - name: shared-data
+          hostPath:
+            path: /home/hlinux/Escritorio/proyecto/data
+            type: Directory

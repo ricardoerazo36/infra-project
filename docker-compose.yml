@@ -1,0 +1,24 @@
+services:
+  downloader:
+    build: ./downloader
+    container_name: news_downloader
+    volumes:
+      - ./data/raw:/app/data/raw
+    command: ["python", "main.py"]
+
+  processor:
+    build: ./processor
+    container_name: news_processor
+    volumes:
+      - ./data/raw:/app/data/raw
+      - ./data/clean:/app/data/clean
+    command: ["python", "main.py"]
+
+  analyzer:
+    build: ./analyzer
+    container_name: news_analyzer
+    volumes:
+      - ./data/clean:/app/data/clean
+      - ./data/analysis:/app/data/analysis
+    command: ["python", "main.py"]
+

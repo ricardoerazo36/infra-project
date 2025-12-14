@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-downloader-svc
+  namespace: news-pipeline
+spec:
+  type: ClusterIP
+  selector:
+    app: news-downloader
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-processor-svc
+  namespace: news-pipeline
+spec:
+  type: ClusterIP
+  selector:
+    app: news-processor
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-analyzer-svc
+  namespace: news-pipeline
+spec:
+  type: ClusterIP
+  selector:
+    app: news-analyzer
+  ports:
+    - port: 80
+      targetPort: 80
