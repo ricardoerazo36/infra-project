@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-economic
+  namespace: news-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: news-economic
+  template:
+    metadata:
+      labels:
+        app: news-economic
+    spec:
+      containers:
+        - name: economic
+          image: proyecto_economic:latest
+          imagePullPolicy: Never
+          env:
+            - name: SLEEP_INTERVAL
+              value: "3600"
+          volumeMounts:
+            - name: shared-data
+              mountPath: /app/data
+      volumes:
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: news-data-pvc

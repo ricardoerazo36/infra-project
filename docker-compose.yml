@@ -1,24 +1,83 @@
+version: '3.8'
+
 services:
+  # Descargador de noticias RSS
   downloader:
     build: ./downloader
     container_name: news_downloader
     volumes:
       - ./data/raw:/app/data/raw
-    command: ["python", "main.py"]
+    environment:
+      - SLEEP_INTERVAL=3600  # Ejecutar cada hora
+    restart: unless-stopped
+    command: ["python", "main_loop.py"]
 
+  # Procesador de texto
   processor:
     build: ./processor
     container_name: news_processor
     volumes:
       - ./data/raw:/app/data/raw
       - ./data/clean:/app/data/clean
-    command: ["python", "main.py"]
+    environment:
+      - SLEEP_INTERVAL=1800  # Ejecutar cada 30 min
+    restart: unless-stopped
+    depends_on:
+      - downloader
+    command: ["python", "main_loop.py"]
 
+  # Analizador de temas
   analyzer:
     build: ./analyzer
     container_name: news_analyzer
     volumes:
       - ./data/clean:/app/data/clean
       - ./data/analysis:/app/data/analysis
-    command: ["python", "main.py"]
+    environment:
+      - SLEEP_INTERVAL=1800
+    restart: unless-stopped
+    depends_on:
+      - processor
+    command: ["python", "main_loop.py"]
 
+  # NUEVO: Recolector de datos económicos
+  economic_data:
+    build: ./economic_data
+    container_name: economic_collector
+    volumes:
+      - ./data/economic:/app/data/economic
+    environment:
+      - SLEEP_INTERVAL=3600
+    restart: unless-stopped
+    command: ["python", "main_loop.py"]
+
+  # NUEVO: Correlador de datos
+  correlator:
+    build: ./correlator
+    container_name: news_correlator
+    volumes:
+      - ./data/analysis:/app/data/analysis
+      - ./data/economic:/app/data/economic
+      - ./data/results:/app/data/results
+    environment:
+      - SLEEP_INTERVAL=3600
+    restart: unless-stopped
+    depends_on:
+      - analyzer
+      - economic_data
+    command: ["python", "main_loop.py"]
+
+  # NUEVO: Dashboard web simple
+  dashboard:
+    build: ./dashboard
+    container_name: news_dashboard
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/results:/app/data/results
+    restart: unless-stopped
+    depends_on:
+      - correlator
+
+volumes:
+  data:
