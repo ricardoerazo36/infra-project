@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-crawl-fetcher
+  namespace: news-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: common-crawl
+  template:
+    metadata:
+      labels:
+        app: common-crawl
+    spec:
+      containers:
+        - name: commoncrawl
+          image: proyecto_commoncrawl:latest
+          imagePullPolicy: Never
+          env:
+            - name: SLEEP_INTERVAL
+              value: "86400"  # 24 horas
+          volumeMounts:
+            - name: shared-data
+              mountPath: /app/data
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+      volumes:
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: news-data-pvc

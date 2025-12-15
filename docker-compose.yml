@@ -78,6 +78,17 @@ services:
     restart: unless-stopped
     depends_on:
       - correlator
+  
+  commoncrawl:
+    build: ./commoncrawl
+    container_name: common_crawl_fetcher
+    volumes:
+      - ./data/commoncrawl:/app/data/commoncrawl
+      - ./data/raw:/app/data/raw  # Para compatibilidad con pipeline existente
+    environment:
+      - SLEEP_INTERVAL=86400  # 24 horas
+    restart: unless-stopped
+    command: ["python", "main_loop.py"]
 
 volumes:
   data:
