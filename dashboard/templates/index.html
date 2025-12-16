@@ -91,6 +91,16 @@
             padding: 15px;
             border-radius: 8px;
             text-align: center;
+            margin: 20px 0;
+        }
+        
+        .warning {
+            background: #ffc107;
+            color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
         }
         
         .chart-container {
@@ -140,6 +150,7 @@
         </div>
         
         <div id="error" style="display: none;"></div>
+        <div id="warning" style="display: none;"></div>
         
         <div id="content" style="display: none;">
             <div class="cards">
@@ -171,6 +182,25 @@
     <script>
         let chart = null;
         
+        function formatColombianTime(isoString) {
+            // Crear fecha en zona horaria de Colombia (UTC-5)
+            const date = new Date(isoString);
+            
+            // Opciones para formato colombiano
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZone: 'America/Bogota',
+                hour12: true
+            };
+            
+            return new Intl.DateTimeFormat('es-CO', options).format(date);
+        }
+        
         async function loadData() {
             try {
                 const statusRes = await fetch('/api/status');
@@ -180,9 +210,23 @@
                     status.correlations_available ? '✅ Operativo' : '⚠️ Sin Datos';
                 
                 document.getElementById('last-update').textContent = 
-                    new Date(status.timestamp).toLocaleString('es-CO');
+                    formatColombianTime(status.timestamp);
                 
+                // Intentar cargar correlaciones
                 const corrRes = await fetch('/api/correlations');
+                
+                if (corrRes.status === 404) {
+                    // No hay datos aún
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('warning').style.display = 'block';
+                    document.getElementById('warning').className = 'warning';
+                    document.getElementById('warning').innerHTML = 
+                        '⚠️ Sistema iniciándose... <br>' +
+                        'Los servicios están recolectando datos. Esto puede tomar unos minutos.<br>' +
+                        '<small>La página se actualizará automáticamente cada 30 segundos.</small>';
+                    return;
+                }
+                
                 const corrData = await corrRes.json();
                 
                 if (corrData.error) {
@@ -193,20 +237,25 @@
                 displayInsights(corrData.insights || []);
                 displayPeriod(corrData.period);
                 
+                // Intentar cargar datos de noticias
                 const newsRes = await fetch('/api/news_counts');
-                const newsData = await newsRes.json();
                 
-                displayNewsChart(newsData);
+                if (newsRes.ok) {
+                    const newsData = await newsRes.json();
+                    displayNewsChart(newsData);
+                }
                 
                 document.getElementById('loading').style.display = 'none';
+                document.getElementById('warning').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
                 
             } catch (error) {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('error').style.display = 'block';
                 document.getElementById('error').className = 'error';
-                document.getElementById('error').textContent = 
-                    'Error al cargar datos: ' + error.message;
+                document.getElementById('error').innerHTML = 
+                    '❌ Error al cargar datos: ' + error.message + '<br>' +
+                    '<small>Verifica que todos los servicios estén corriendo con: docker-compose ps</small>';
             }
         }
         
@@ -265,11 +314,17 @@
             container.innerHTML = `
                 <p><strong>Inicio:</strong> ${period.start}</p>
                 <p><strong>Fin:</strong> ${period.end}</p>
+                <p><strong>Días analizados:</strong> ${period.days}</p>
             `;
         }
         
         function displayNewsChart(data) {
             const dates = Object.keys(data).sort();
+            
+            if (dates.length === 0) {
+                return;
+            }
+            
             const topics = ['economia', 'seguridad', 'politica', 'salud'];
             
             const datasets = topics.map((topic, i) => {
@@ -323,7 +378,10 @@
             });
         }
         
+        // Cargar datos al inicio
         loadData();
+        
+        // Actualizar cada 30 segundos
         setInterval(loadData, 30000);
     </script>
 </body>
