@@ -8,7 +8,7 @@ services:
     volumes:
       - ./data/raw:/app/data/raw
     environment:
-      - SLEEP_INTERVAL=3600  # Ejecutar cada hora
+      - SLEEP_INTERVAL=3600
     restart: unless-stopped
     command: ["python", "main_loop.py"]
 
@@ -20,7 +20,7 @@ services:
       - ./data/raw:/app/data/raw
       - ./data/clean:/app/data/clean
     environment:
-      - SLEEP_INTERVAL=1800  # Ejecutar cada 30 min
+      - SLEEP_INTERVAL=1800
     restart: unless-stopped
     depends_on:
       - downloader
@@ -40,7 +40,7 @@ services:
       - processor
     command: ["python", "main_loop.py"]
 
-  # NUEVO: Recolector de datos económicos
+  # Recolector de datos económicos (CON GEMINI)
   economic_data:
     build: ./economic_data
     container_name: economic_collector
@@ -48,10 +48,11 @@ services:
       - ./data/economic:/app/data/economic
     environment:
       - SLEEP_INTERVAL=3600
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
     restart: unless-stopped
     command: ["python", "main_loop.py"]
 
-  # NUEVO: Correlador de datos
+  # Correlador de datos
   correlator:
     build: ./correlator
     container_name: news_correlator
@@ -67,7 +68,7 @@ services:
       - economic_data
     command: ["python", "main_loop.py"]
 
-  # NUEVO: Dashboard web simple
+  # Dashboard web - CORREGIDO con volumen de analysis
   dashboard:
     build: ./dashboard
     container_name: news_dashboard
@@ -75,18 +76,20 @@ services:
       - "8080:8080"
     volumes:
       - ./data/results:/app/data/results
+      - ./data/analysis:/app/data/analysis  # ← AGREGADO
     restart: unless-stopped
     depends_on:
       - correlator
-  
+
+  # Common Crawl fetcher
   commoncrawl:
     build: ./commoncrawl
     container_name: common_crawl_fetcher
     volumes:
       - ./data/commoncrawl:/app/data/commoncrawl
-      - ./data/raw:/app/data/raw  # Para compatibilidad con pipeline existente
+      - ./data/raw:/app/data/raw
     environment:
-      - SLEEP_INTERVAL=86400  # 24 horas
+      - SLEEP_INTERVAL=86400
     restart: unless-stopped
     command: ["python", "main_loop.py"]
 
