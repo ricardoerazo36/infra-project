@@ -4,7 +4,7 @@ metadata:
   name: news-processor
   namespace: news-pipeline
 spec:
-  replicas: 1
+  replicas: 2  # Escalable para procesamiento paralelo
   selector:
     matchLabels:
       app: news-processor
@@ -17,11 +17,20 @@ spec:
         - name: processor
           image: proyecto_processor:latest
           imagePullPolicy: Never
+          env:
+            - name: SLEEP_INTERVAL
+              value: "1800"
           volumeMounts:
             - name: shared-data
               mountPath: /app/data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
       volumes:
         - name: shared-data
-          hostPath:
-            path: /home/hlinux/Escritorio/proyecto/data
-            type: Directory
+          persistentVolumeClaim:
+            claimName: news-data-pvc

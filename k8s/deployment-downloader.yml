@@ -17,11 +17,20 @@ spec:
         - name: downloader
           image: proyecto_downloader:latest
           imagePullPolicy: Never
+          env:
+            - name: SLEEP_INTERVAL
+              value: "3600"
           volumeMounts:
             - name: shared-data
               mountPath: /app/data
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
       volumes:
         - name: shared-data
-          hostPath:
-            path: /home/hlinux/Escritorio/proyecto/data
-            type: Directory
+          persistentVolumeClaim:
+            claimName: news-data-pvc
