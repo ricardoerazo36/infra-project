@@ -5,8 +5,8 @@
 | Nombre | Código | Correo |
 |--------|--------|--------|
 | Ricardo Erazo Muñoz | 2242117 | ricardo.erazo@correounivalle.edu.co |
-| [Nombre Integrante 2] | [Código] | [correo@example.com] |
-| [Nombre Integrante 3] | [Código] | [correo@example.com] |
+| Heidy Gelpud | 2242550 | heidy.gelpud@correounivalle.edu.co |
+| James Calero | 2243461 | james.calero@correounivalle.edu.co |
 
 ---
 
@@ -192,23 +192,12 @@ Esta es la forma más sencilla de ejecutar el proyecto.
 #### Paso 1: Clonar el repositorio
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd proyecto
+git clone https://github.com/ricardoerazo36/infra-project.git
 ```
 
 #### Paso 2: Configurar la API Key de Gemini
 
-El proyecto usa la API de Google Gemini para obtener datos del COLCAP. Ya viene configurada una API Key de prueba, pero puedes cambiarla:
-
-```bash
-# Editar el archivo .env
-nano .env
-
-# Contenido del archivo:
-GEMINI_API_KEY=tu_api_key_aqui
-```
-
-> 💡 **Obtener API Key gratuita**: Visita [Google AI Studio](https://aistudio.google.com/apikey)
+El proyecto usa la API de Google Gemini para obtener datos del COLCAP. Ya viene configurada una API Key de prueba.
 
 #### Paso 3: Ejecutar el despliegue
 
@@ -341,18 +330,6 @@ Una vez que el sistema esté funcionando, el Dashboard te mostrará:
 3. **Insights**: Interpretaciones automáticas de los datos.
 
 4. **Gráfico de Evolución**: Muestra la cantidad de noticias por tema a lo largo del tiempo.
-
-### API Endpoints
-
-El dashboard también expone una API REST:
-
-| Endpoint | Descripción |
-|----------|-------------|
-| `GET /api/status` | Estado del sistema |
-| `GET /api/correlations` | Últimas correlaciones calculadas |
-| `GET /api/news_counts` | Conteo de noticias por día y categoría |
-
----
 
 ## ⚙️ Configuración y Personalización
 
@@ -518,40 +495,4 @@ find data/clean -name "*.json" | wc -l
 # Ver las últimas correlaciones
 cat data/results/correlations_latest.json | python -m json.tool
 ```
-
----
-
-## 📚 Referencias y Recursos
-
-- [Documentación de Docker](https://docs.docker.com/)
-- [Documentación de Docker Compose](https://docs.docker.com/compose/)
-- [Documentación de Kubernetes](https://kubernetes.io/docs/home/)
-- [API de Google Gemini](https://ai.google.dev/docs)
-- [Bolsa de Valores de Colombia](https://www.bvc.com.co/)
-- [Common Crawl](https://commoncrawl.org/)
-
----
-
-## 📝 Licencia
-
-Este proyecto fue desarrollado con fines académicos.
-
----
-
-## 🤝 Contribuciones
-
-Si deseas contribuir al proyecto:
-
-1. Haz un Fork del repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Haz commit de tus cambios (`git commit -m 'Añadir nueva funcionalidad'`)
-4. Haz push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
-
----
-
-<div align="center">
-
-**Desarrollado con ❤️ para el análisis de datos colombianos**
-
 </div>
