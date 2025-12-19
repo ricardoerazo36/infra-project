@@ -185,7 +185,7 @@ docker-compose --version
 git --version
 ```
 
-### Opción 1: Despliegue con Docker Compose (Recomendado)
+### Opción 1: Despliegue con Docker Compose
 
 Esta es la forma más sencilla de ejecutar el proyecto.
 
@@ -350,37 +350,6 @@ Una vez que el sistema esté funcionando, el Dashboard te mostrará:
 | Economic Data | 1 hora | Actualiza COLCAP |
 | Correlator | 1 hora | Calcula correlaciones |
 | Common Crawl | 24 horas | Busca en archivo histórico |
-
-### Añadir Nuevas Fuentes RSS
-
-Edita el archivo `downloader/main_loop.py`:
-
-```python
-RSS_FEEDS = [
-    "https://www.eltiempo.com/rss/colombia.xml",
-    "https://www.portafolio.co/rss.xml",
-    "https://www.elespectador.com/rss/economia",
-    # Añade aquí nuevas fuentes:
-    "https://nueva-fuente.com/rss.xml",
-]
-```
-
-### Añadir Nuevas Categorías de Análisis
-
-Edita el archivo `analyzer/main_loop.py`:
-
-```python
-topics = {
-    "economia": ["economía", "económico", "colcap", "bvc", "inflación", "dólar"],
-    "seguridad": ["sicario", "asesinato", "homicidio", "violencia"],
-    "politica": ["gobierno", "ministro", "presidente", "congreso"],
-    "salud": ["salud", "hospital", "covid", "enfermedad"],
-    # Añade aquí nuevas categorías:
-    "deportes": ["fútbol", "partido", "gol", "campeonato"],
-}
-```
-
----
 
 ## 🔧 Comandos Útiles
 
