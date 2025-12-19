@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-12-17T15:50:39.657376",
+  "correlations": {
+    "economia": 0.0,
+    "seguridad": 0.9917625120400053,
+    "politica": 0.6068106920776767,
+    "salud": 0.9917625120400055
+  },
+  "insights": [
+    {
+      "topic": "seguridad",
+      "correlation": 0.9917625120400053,
+      "insight": "Correlación fuerte positiva (0.992). Las noticias de seguridad aumentan cuando el COLCAP sube."
+    },
+    {
+      "topic": "politica",
+      "correlation": 0.6068106920776767,
+      "insight": "Correlación moderada positiva (0.607). Las noticias de politica aumentan cuando el COLCAP sube."
+    },
+    {
+      "topic": "salud",
+      "correlation": 0.9917625120400055,
+      "insight": "Correlación fuerte positiva (0.992). Las noticias de salud aumentan cuando el COLCAP sube."
+    },
+    {
+      "topic": "general",
+      "insight": "Promedio de 6.7 noticias diarias en el período analizado."
+    }
+  ],
+  "period": {
+    "start": "2025-12-14",
+    "end": "2025-12-17",
+    "days": 4
+  }
+}

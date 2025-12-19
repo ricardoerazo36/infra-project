@@ -40,7 +40,7 @@ services:
       - processor
     command: ["python", "main_loop.py"]
 
-  # Recolector de datos económicos (CON GEMINI)
+  # Recolector de datos económicos 
   economic_data:
     build: ./economic_data
     container_name: economic_collector
@@ -68,7 +68,6 @@ services:
       - economic_data
     command: ["python", "main_loop.py"]
 
-  # Dashboard web - CORREGIDO con volumen de analysis
   dashboard:
     build: ./dashboard
     container_name: news_dashboard
@@ -76,7 +75,7 @@ services:
       - "8080:8080"
     volumes:
       - ./data/results:/app/data/results
-      - ./data/analysis:/app/data/analysis  # ← AGREGADO
+      - ./data/analysis:/app/data/analysis  
     restart: unless-stopped
     depends_on:
       - correlator

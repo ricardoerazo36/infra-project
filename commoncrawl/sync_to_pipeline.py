@@ -20,7 +20,6 @@ def sync_commoncrawl_to_pipeline():
         cc_path = os.path.join(CC_DIR, filename)
         raw_path = os.path.join(RAW_DIR, filename)
         
-        # Solo copiar si no existe en raw
         if not os.path.exists(raw_path):
             try:
                 # Leer datos de Common Crawl

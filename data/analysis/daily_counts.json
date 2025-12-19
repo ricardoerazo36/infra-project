@@ -12,10 +12,17 @@
   "2025-11-09": {
     "economia": 1
   },
+  "2025-12-17": {
+    "seguridad": 6,
+    "politica": 4
+  },
   "2025-12-14": {
     "seguridad": 4,
     "salud": 1,
     "politica": 1
+  },
+  "2025-12-16": {
+    "seguridad": 2
   },
   "2025-12-15": {
     "seguridad": 7,
