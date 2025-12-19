@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Descargador de noticias RSS
   downloader:
