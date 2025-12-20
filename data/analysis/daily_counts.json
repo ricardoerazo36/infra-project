@@ -16,6 +16,10 @@
     "seguridad": 6,
     "politica": 4
   },
+  "2025-12-19": {
+    "seguridad": 5,
+    "salud": 1
+  },
   "2025-12-14": {
     "seguridad": 4,
     "salud": 1,
@@ -23,10 +27,6 @@
   },
   "2025-12-16": {
     "seguridad": 2
-  },
-  "2025-12-19": {
-    "seguridad": 4,
-    "salud": 1
   },
   "2025-12-15": {
     "seguridad": 7,
